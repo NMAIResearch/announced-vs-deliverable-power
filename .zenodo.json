@@ -1,5 +1,5 @@
 {
-  "title": "Contingent vs Robust AI Power Demand (interactive)",
+  "title": "Announced vs. Deliverable AI Power Demand (interactive)",
   "upload_type": "software",
   "license": "CC-BY-4.0",
   "creators": [
@@ -8,12 +8,14 @@
       "orcid": "0009-0003-4213-7769"
     }
   ],
-  "description": "An interactive, explorable front-end to Contingent vs Robust AI Power Demand: a realized announced-to-in-service completion anchor from the PJM interconnection queue, where most announced generation projects leave the funnel. A deflation calculator deflates any announced capacity through three measured attrition stages (de-duplication, viability survival to a signed interconnection agreement, and build rate), with defaults set to the PJM mature-cohort base rate (about one announced MW in five built); a second view shows the published completion funnel and realized completion by cohort. No raw PJM data is bundled (it carries a redistribution restriction); only the published derived aggregates. Supply-side deflation, not the demand headline. Companion to the paper at DOI 10.5281/zenodo.20559430. CC BY 4.0.",
+  "description": "An interactive, explorable front-end to Announced vs. Deliverable AI Power Demand, covering both sides of the meter. Supply side: a realized announced-to-in-service completion anchor from the PJM generation queue, where most announced projects leave the funnel; a deflation calculator runs any announced capacity through three measured attrition stages (de-duplication, viability survival to a signed interconnection agreement, build rate), defaulted to the PJM mature-cohort base rate (about one announced MW in five built), and a second view shows the published funnel and completion by cohort. Load side: how much announced data-centre demand survives the grid operators' own screens, across PJM (submitted about 60 GW to accepted about 38 GW to firm about 32 GW for 2030) and ERCOT (about 226 GW requested; a realized per-site de-rate of 49.8 percent; about 5.3 GW energized to date), with a two-rail energisation bracket (about 20 percent floor to about 48-63 percent ceiling). On the load side the operators perform the deflation themselves; this tool packages it cross-region and brackets it. The supply-side raw PJM export carries a redistribution restriction (derived aggregates only); the load-side aggregates are transcribed from public PJM and ERCOT filings. CC BY 4.0.",
   "keywords": [
     "AI power demand",
     "data centre electricity",
+    "data center load",
     "interconnection queue",
     "PJM",
+    "ERCOT",
     "completion rate",
     "deflation",
     "reproducibility",

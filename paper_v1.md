@@ -1,0 +1,199 @@
+# Announced vs. Deliverable AI Power Demand (v1)
+
+### Data-centre load survival across grid operator screens in PJM and ERCOT
+
+**NM AI Research** (ORCID 0009-0003-4213-7769) · 16 August 2026 · v1 working paper · CC BY 4.0
+
+*AI disclosure: the research design, method, sourcing decisions and analytical judgements are the author's; this text was drafted with AI assistance and reviewed by the author before publication. The models, and the conflicts they create, are named in the Conflict of interest and scope section.*
+
+---
+
+## Abstract
+
+Forecasts of AI-driven electricity demand treat announced capacity as if it were firm, on both sides of the meter: the generation announced to serve the load, and the data-centre load itself. This note deflates both, using the grid operators' own resolved data. On the supply side (carried from v0.1), PJM's resolved serial queue (8,253 generation projects, ≈837 GW announced) shows only ≈16-25% of announced MW reach commercial operation: 22.8% on the mature 2010-2017 cohort. On the load side, the deflation is performed and published by the operators themselves: PJM has already cut its 2030 large-load request from ≈60 GW submitted to ≈38 GW accepted, of which only the ≈32 GW that is firm (backed by an Electric Service Obligation or Construction Commitment) counts toward capacity; its documented worked example survives at ≈48% of requested capacity. In ERCOT, whose ≈226 GW queue (≈70-77% data centres) was maximally padded by a near-zero historical barrier to entry, the one quantity both operators state in comparable terms is measured rather than assumed, and it undercuts PJM: ERCOT's metered per-site peak consumption is 49.8% of requested MW across non-crypto data centres built 2022-2024, against the 70% capacity-to-demand factor PJM applies forward. ERCOT's commissioned 2030 scenario is lower again in relative terms (≈35 GW against a ≈226 GW queue), but it is a model rather than a measurement and is reported as context on queue padding, not as a second cross-region axis. Both operators now gate their planning forecasts on an executed agreement. The contribution is not the deflation but its packaging: an independent referee, plus a two-rail deliverable envelope (≈20% historical completion floor from generation to ≈48-63% PJM-accepted ceiling) that names every assumption. The output is a band with its softest input named, letting a planner treat any announced headline as a scenario, not a baseline.
+
+---
+
+## 1. Context and question
+
+The same error the bot-energy paper deflated (a real headline number multiplied against a *contaminated set* and quoted as a single figure) recurs, larger, in AI power-demand projections, on both sides of the meter. On the supply side the contaminated set is the generation-interconnection queue (duplicate filings, speculative projects, projects that withdraw once costs are known). On the load side it is the data-centre interconnection queue, inflated by the same mechanisms plus an absence of standardised entry requirements. The target of this deflation is not the grid operators themselves (who already apply these haircuts and publish the method), but the public reporting, equity research, and private-capital announcements that treat raw headline interconnection requests as firm baseline demand. Two questions follow. Of announced *generation* capacity, how much is deliverable? And of announced data-centre *load*, how much is real? v0.1 answered the first; v1 adds the second, and finds the operators already answer it themselves.
+
+## 2. Data and method
+
+**Supply side.** PJM "Serial Service Request Status" (the legacy serial queue, projects entering before the July-2023 cluster transition), exported as XLSX. PJM planning data carry a redistribution restriction; this work publishes derived aggregates only, and `reproduce.py` reads a locally-downloaded file rather than bundling it. Reproducibility caveat: because the input cannot be redistributed, the supply-side script is reproducible only by someone who has independently obtained PJM access.
+
+**Load side.** Public operator records from PJM and ERCOT:
+
+- PJM Resource Adequacy Planning: *Load Adjustment Request Implementation* (1 July 2025) for haircut rules; *Load Adjustment Requests Summary* (24 November 2025) for submitted, proposed, and firm curves; *2026 Long-Term Load Forecast Report* (14 January 2026) for accepted figures.
+- ERCOT: *System Planning and Weatherization Update* (December 2025) for queue size; *Large Load Q&A* (24 December 2025) for energized tracking; *Long-Term Load Forecast 2025* for metered peak consumption; and market notices *NPRR1234* / *PGRR115* for the forecast gate (via public filings and verified secondary reporting).
+
+The load-side figures are published aggregates; they require no redistribution-restricted file and are reproducible from the documents above.
+
+**The conditional-funnel discipline (supply side).** Because the same projects move through queue milestones, the survival rate at each gate is conditional on the prior gate's survivors, so the rates multiply validly:
+
+```
+deliverable = headline × r2(viability) × r3(build)
+  r2 = MW reaching an executed Interconnection Agreement ÷ MW entered
+  r3 = MW In Service ÷ MW reaching an executed IA
+```
+
+`r2 × r3 = built ÷ entered` by definition: it is the decomposition restated as an identity, not an independent consistency check. De-duplication `r1` is treated separately (§5).
+
+## 3. Supply-side queue completion
+
+**Realized completion by cohort (MW-Energy weighted; In-Service-only):**
+
+| Submitted cohort | % resolved | % built | % withdrawn* |
+|---|---|---|---|
+| ≤2009 | 100% | 16% | 84% |
+| 2010-14 | 100% | 25% | 75% |
+| 2015-17 | 92% | 20% | 71% |
+| 2018-20 | 75% | 3% (still building) | 72% |
+| 2021-25 | 84% | 0% (too new) | 84% |
+
+*\*Note: %withdrawn counts Status=='Withdrawn' only; other exits such as Retracted, Canceled, or Deactivated sit in %resolved but not in this column.*
+
+The mature cohorts converge on a realized completion of ≈16-25% of announced MW: roughly one announced MW in five is delivered. This is directionally corroborated by, not strictly like-for-like with, the published anchors: LBNL *Queued Up* reports ≈14-20% nationally (vs PJM-only here), and Exelon discloses ≈22% of its development pipeline (a company pipeline, not a queue-completion rate).
+
+**Funnel decomposition (2010-2017 cohort, 204.4 GW entered):**
+
+| Stage | % of entered |
+|---|---|
+| Entered queue | 100% |
+| Reached Feasibility | 93% |
+| Reached System Impact | 65% |
+| Reached IA-executed | 39.1% (= r2)* |
+| Built (In Service) | 22.8% |
+
+*\*r2 on the headline basis, which includes interim WMPAs; excluding them gives 38.0%. See §3 text and the Verification note.*
+
+with r3 (IA → service) = 58.1%, and r2 × r3 = 22.8% = built/entered (the identity). 61% of announced MW exit before a signed agreement. The largest single drop, 28pp, occurs between Feasibility and the System Impact Study, where each project learns its share of network-upgrade costs. Attrition is not concentrated there, however: it is spread across three gates (28pp into System Impact, 26pp into IA-executed, 16pp from IA to in service). A further 13% of entered MW hold a signed agreement but are neither in service nor under construction, with ~3.2% still under construction. IA-executed includes interim Wholesale Market Participation Agreements (WMPA); excluding them shifts r2 from 39.1% down to 38.0% (and r3 from 58.1% to 59.8%), while realized completion is identical at 22.8% since built ÷ entered does not pass through the IA gate. Switching to a MW-Capacity basis moves the headline only to 24.8%: the one-in-five anchor is stable to the basis choice.
+
+## 4. Supply-side transfer assumption
+
+Cohort comparability is the supply-side assumption: the mature 2010-2017 generation is generic (wind/solar/gas) used as a completion base rate, not capacity announced to serve AI, and transferring that rate to the AI-era cohort is an assumption, not a measurement.
+
+**Why the base rate transfers: the binding constraint is the grid, not the balance sheet.** The natural objection is that AI-era projects carry larger budgets and stronger site control than a speculative wind farm, so they should complete at a higher rate. That objection targets the *developer*; the completion rate is set by the *grid*. The largest single drop in §3 occurs at the System Impact Study, where a project learns its share of network-upgrade costs, a grid-physics and grid-economics gate (interconnection capacity, transformer and switchgear lead times, transmission build-out) that a larger budget does not remove, only pays into. A well-capitalised data centre still waits behind the same transformer lead times and the same congested interconnection points. The proxy is therefore strongest where the failure is grid-driven (the case here) and weakest where it would be purely developer-economic; that distinction is what the lower rail in §9 rests on, and it is stated directly.
+
+FERC Order 2023's stricter site-control and deposit rules imply recent cohorts should complete above the historical floor, yet the 2021-2025 cohort has already withdrawn 84% of its MW while building none: too young to confirm either way. State the assumption; give the range.
+
+## 5. Supply-side de-duplication
+
+On PJM's post-2023 cluster cohort (the AI-surge vintage; 869 non-zero-MW generation projects, 119 GW announced), literal duplicate filings remove only ≈8% of MW on a strict matching key, rising to ≈19% under an over-broad developer-county aggregation that absorbs distinct projects; the literal finding is the 8%. The cohort has nonetheless already shed 63% of its MW. The inflation is therefore viability- and withdrawal-driven, not duplication-driven; de-duplication barely moves the headline. The "5-10× phantom filings" prior, read narrowly as literal duplicates, is too high; read broadly as "MW that never get built," it is not refuted: the realized completion in §3 already implies roughly 5× non-completion.
+
+## 6. Supply-side scope
+
+Supply, not demand: §3 to §5 deflate the *generation* side. "Built" counts only In Service (conservative, biasing the rate down). The output is a band, not a point. The analyst value is letting a planner treat an announced generation headline as a scenario, not a baseline.
+
+## 7. PJM large-load filter
+
+The headline this section addresses is the demand number the supply side does not: the ≈950 TWh-by-2030 trajectory (from ≈485 TWh in 2024 to ≈950 TWh by 2030; IEA, *Electricity 2026*) and the "$850B announced data-centre leases" framing circulating in private-capital commentary both rest on data-centre *load* requests. Here the method changes for a structural reason, and the change is a gift to reproducibility.
+
+**Data centres connect as load, not generation.** They do not flow through the generation queue §3 measured, and the large-load process is new (the surge began 2024-2025), so there is no matured data-centre load cohort yet: a historical "% energised" rate cannot be computed the way §3 did. But the absence is filled by the operator: PJM performs and publishes the announced-to-deliverable deflation itself, with a documented, reproducible method. This note's contribution on the load side is therefore explicitly not "we deflate the load." It is to package the operator's own published deflation into an independent, cross-region referee, and to bracket it (§9).
+
+**What PJM publishes.** PJM reports three curves for large-load demand:
+
+| Curve | 2030 | Share of submitted | What it is |
+|---|---|---|---|
+| Submitted (requested) | ≈60 GW | 100% | large-load demand requests (rises to ≈115 GW by 2046; read from unlabelled bar chart) |
+| Proposed (PJM-accepted, preliminary) | ≈38 GW | ≈63% | accepted forecast after vetting (≈88 GW by 2046; read from unlabelled bar chart) |
+| Firm only (ESO/CC-backed) | ≈32 GW | ≈53% | the subset that counts toward capacity / RPM (read from unlabelled bar chart) |
+
+PJM's own data-centre-specific statement supports "up to ≈30 GW of data-centre growth 2025-2030," noting it is ≈40% of US data centres in 2025 and that it cross-checked FT, Deloitte, BCG, McKinsey and BNEF rather than relying on one source.
+
+**The documented haircut mechanics.** The vetting is explicit, which is what makes it reproducible rather than a guess. Only projects with an Electric Service Obligation or Construction Commitment are "Firm" and allowed to impact capacity; a default 50% probability is applied to non-firm projects coming online in 3-8 years absent an EDC/LSE factor; a 70% capacity-to-demand utilization factor is imposed; a minimum 36-month ramp applies; and national average scaling is applied to reflect national constraints. Non-firm requests pass three multiplicative screens, not two. PJM applies the default 50% probability; then conforms the request to the Implementation document's ramp and utilization guidelines; and then reduces it again, in PJM's words, "to reflect National constraints" (the per-EDC slides record this as "50% and national average scaling," and for several EDCs non-firm load before 2030 is zeroed outright). The published worked example covers only the first two screens. That is why the aggregate is not a simple application of it: of the ≈60 GW submitted for 2030, ≈32 GW is already Firm and passes without a probability haircut, while the ≈28 GW of non-firm survives to ≈6 GW inside the ≈38 GW accepted: a ≈21% non-firm survival rate, against the ≈48% the worked example alone would give. The residual, a factor of roughly 0.44, is the national-scaling step. Two things follow. The ≈63% aggregate is driven mainly by how much of the request was already contractually committed rather than by the severity of the haircut on the rest; and the deflation PJM actually applies to uncommitted load is materially steeper than its own documented worked example implies. AEP's submission was de-rated by more than 50% (slide 14).
+
+**The final report confirms the direction first-hand.** The 2026 Long-Term Load Forecast is lower than the 2025 forecast through 2032, with PJM stating that the firm-vs-non-firm distinction "has brought large load adjustments down in the near-term forecast years." Specific revisions versus the 2025 report: 3rd IA 2026 −2,564 MW (−1.6%); RPM Auction 2028 −4,414 MW (−2.6%); RTEP 2031 −1,630 MW (−0.8%).
+
+**Viability gate hardening: a filter, not a solution.** A FERC order of 18 December 2025 and PJM's CIFP introduce an Expedited Interconnection Track (effective ≈August 2026) requiring a $15,000/MW refundable readiness deposit, 100% of network-upgrade cost, and state siting support. A reasonable objection is that these rules make the future queue cleaner than the historical one, so past attrition over-states future attrition. Two points keep that in proportion. First, the rules raise the *barrier to entry*; they do not guarantee *project viability*: a paid deposit moves the failure point earlier (from the study stage to the commitment stage) rather than removing it, so a filtered queue still loses projects to grid costs and build timelines. Second, the existence of the rules is itself operator confirmation that the queue is padded: deposits of this size are not imposed on a credible pipeline. The net effect is to push realized completion toward the *upper* rail of the §9 bracket over time, which the band already spans.
+
+**Sanity rail (not a demand estimate).** PJM capacity prices moved $28.92 → $269.92 → $329.17/MW-day (held by a cap), roughly 10× (IEEFA), a coarse confirmation that the inflation is material to ratepayers, not a measure of demand.
+
+## 8. ERCOT cross-region rail
+
+ERCOT is the cleanest cross-region check for two reasons. First, until the PGRR115 rules it had almost no barrier to entry (by ERCOT's account a speculative phone call could become a formal request), so its queue is maximally padded, the opposite extreme to PJM's gated process. Second, and uniquely, ERCOT publishes an empirical *realized* post-build de-rate: observed peak consumption against requested MW, for sites that have actually been built. That is the only figure in either region that measures rather than assumes.
+
+| Stage | GW | Share of requested | Source |
+|---|---|---|---|
+| Requested (large-load queue, Dec 2025) | ≈226 | 100% | ERCOT System Planning Update Dec 2025 (≈233 GW at the 9 Dec board) |
+| Credible 2030 data-centre scenario | ≈35 | ≈15% | Aurora Energy Research (ERCOT-commissioned resource-adequacy study) |
+| Energized to date (18 Nov 2025) | 5,302 MW (≈5.3 GW) | ≈2% | ERCOT Large Load Interconnection Process Q&A, 24 Dec 2025 |
+
+The queue is ≈70-77% data centres and grew from ≈63 GW at the end of 2024. ERCOT's own characterisation is that most of it "will not materialize."
+
+**Three quantities that must not be conflated.** ERCOT's data separates three different things, and the analysis turns on keeping them apart:
+
+- **Request survival**: how much of the requested queue survives vetting into the credible forecast. ERCOT's commissioned scenario puts deliverable 2030 data-centre load near ≈35 GW against a ≈226 GW queue (≈15% survival), and ERCOT will, after 2026, count only executed-agreement load. This is a commissioned forward model (Aurora), not an ERCOT measurement, and it is reported here as an indication of how padded the queue is rather than as a cross-region comparison against PJM's ≈63% acceptance, which is itself a planning judgement.
+- **Realized utilization (performance)**: for data-centre sites that actually got built (2022-2024 in-service dates), the average per-site peak consumption is 49.8% of the requested MW (ERCOT Long-Term Load Forecast 2025, non-crypto additions). A related ERCOT figure (via the WECC large-loads risk assessment, Figure 2.2) shows only 58-78% of requested transmission service is used on peak within a year. This is a *performance* measure, conditional on the project existing.
+- **Energized to date**: 5,302 MW (≈5.3 GW, or ≈2% of ERCOT's large-load tracking) had been observed energized as of 18 November 2025. This is an *age* figure, not a failure rate: the surge began in 2024-2025 and a large load takes years to build and ramp, so a low energised share is expected and says nothing about eventual completion. Reading the 2% as "98% will fail" is the misread the three-way split is designed to prevent.
+
+**The forecast gate (ERCOT's analog of PJM's Firm/ESO-CC).** PGRR115 / NPRR1234, effective 15 December 2025, require executing all agreements, notice to proceed, and payment of financial obligations before approval to energize; going forward, only executed-agreement loads enter the large-load forecast. Texas SB6 adds upfront study fees and duplicate-request disclosure, with PUCT rulemaking due December 2026.
+
+**The cross-region finding: metered utilization falls below assumed utilization.** Only one quantity is expressed in comparable terms by both operators, and on that quantity ERCOT's measured outcome is materially worse than PJM's planning assumption.
+
+| Axis | PJM | ERCOT | Basis |
+|---|---|---|---|
+| Post-build peak utilization | 70% | 49.8% | PJM: assumed capacity-to-demand factor applied forward. ERCOT: metered per-site peak ÷ requested MW, non-crypto data centres in service 2022-2024. |
+
+PJM assumes a built data centre draws 70% of its requested capacity at peak. ERCOT measures 49.8% across the sites that have actually been built. That is a ≈1.4× gap on the one figure both operators state the same way, and it points where everything else in this note points: the request over-states the load, and it does so even after the project is built and running.
+
+The forward axis is deliberately not offered as a second comparison. PJM's ≈63% acceptance is an administrative vetting outcome; ERCOT's ≈15% (≈35 GW of ≈226 GW) is a commissioned scenario model. Both are planning judgements rather than measurements, and the ≈4× gap between them reflects two different modelling exercises applied to two differently-padded queues, not evidence that either is correct. ERCOT's scenario is reported in the three-quantity split above as an indication of how padded its queue is, and it does not enter the §9 bracket.
+
+Both operators now gate their planning forecasts on executed agreements.
+
+## 9. Two-rail energisation bracket
+
+With no matured data-centre load cohort, the deliverable rate cannot be measured directly; it is bounded by two rails, and the gap between them defines the envelope.
+
+- **Upper rail (operator-accepted into the forecast).** Rests on PJM's forward vetting: ≈63% of 2030 submitted survives vetting (Firm-only ≈53%, worked example ≈48%). ERCOT contributes no figure to this rail: its ≈15% scenario is a commissioned model, and its 49.8% metered peak measures utilization after build rather than survival into a forecast. Both sit outside the bracket by construction. Call the upper rail ≈48-63%: the worked-example de-rate at the bottom, the accepted aggregate at the top.
+- **Lower rail (energisation proxy).** No load cohort has resolved, so the floor is borrowed from the supply side: generation-queue historical completion ≈20-22% (§3 / LBNL). This transfers on the grid-physics channel argued in §4 (generation and load are gated by the same network-upgrade-cost exposure, the same transformer and switchgear lead times, and the same congested interconnection points, though they clear separate queues), so it is a defensible floor where the binding constraint is the grid, and a labelled proxy, not a measured load-completion rate, where it is not.
+- **A note on denominators.** The two rails are not denominated identically, and PJM's own documentation settles which is which. The 70% capacity-to-demand factor is applied to every submitted project, Firm included: PJM "imposed 70% unless otherwise supported," and the EDC submissions record a "70% utilization rate for each data center's requested capacity." The Proposed and Firm curves are therefore stated in forecast demand, while the Submitted curve is stated in requested capacity, so the upper rail is a demand ÷ requested-capacity ratio. The lower rail is a capacity ratio (MW in service ÷ MW announced). Read the envelope as spanning two related questions: how much requested capacity gets built, and how much requested load is accepted into a forecast, not as a confidence interval on one quantity. On a common capacity basis the upper rail would be higher by roughly the reciprocal of 0.70; the band is reported on the operators' own published basis rather than restated, and this is the softest joint in it.
+
+> The deliverable band for announced data-centre demand entering planning forecasts is ≈20% (energisation floor) to ≈48-63% (operator-accepted ceiling). The band deliberately spans the regime change: the lower rail is the old, lightly-gated queue's completion; the upper rail is the operators' newly-vetted acceptance. By PJM's own primary vetting, ≈63% of the announced large-load ask survives into the forecast and ≈53% is firm, and historical energisation on the supply side is lower again. Announced is a scenario, not a baseline.
+
+ERCOT's ≈2% energized-to-date sits below even the floor because its cohort is too young to have built out: the age artefact of §8, not a completion rate.
+
+**Who this serves.** The value is to the planner, not to a market view. Treating a requested queue as firm leads to over-procurement of generation and transmission; the cost of that over-build lands on ratepayers through capacity-price spikes of the kind the §7 sanity rail records (a roughly 10× move). Deflating the headline to a band lets a planner size investment to deliverable load rather than to a contaminated request, which is a ratepayer-protection argument as much as an analytical one.
+
+## 10. Limitations and scope
+
+- **The contribution is the packaging, not the deflation.** On the load side the operators deflate and publish; restating that would add nothing. What is absent, and what this provides, is an independent, cross-region referee that places PJM and ERCOT side by side on a common frame, brackets the accepted figure against a realized-completion floor, and names every assumption. The same empty ground the supply-side anchor filled, on the demand side.
+- **Not a crash call; avoided, not saved.** Method-first and agnostic on whether or when a financial correction lands; the split between contingent demand and deliverable demand holds either way. Deflated demand is capacity never built, or built and idled (stranded), not efficiency saved.
+- **Two named load-bearing assumptions.** Supply side: cohort comparability, carried by the grid-as-binding-constraint argument (§4). Load side: that the operators' published de-rates and the executed-agreement gate transfer to the energised outcome (the upper rail is acceptance, not energisation; the lower rail is a generation proxy that holds on the grid-physics channel). A third assumption is that the two rails are commensurable enough to bracket; §9 states, from PJM's documentation, how each is denominated.
+- **Capacity vs. Energy conversion.** The deliverable envelope is denominated in electrical capacity (GW). Translating these brackets into energy consumption (TWh) requires an explicit load-factor bridge and cannot be done by linear scaling alone.
+- **OOM, not precision.** The output is a band with its softest inputs marked, in both regions.
+
+## 11. Prior art and lineage
+
+The bot-energy paper (Zenodo concept DOI 10.5281/zenodo.20512703) is the proof-of-method: the deflation discipline was built and validated on a clean, low-stakes case (where the author pushed his own bound up against his interest) before being pointed at the numbers that matter. The sequencing demonstrates the trait the work is for: not inflating even when inflating makes the better headline. v0.1 applied it to the supply side; v1 extends it to the demand side and to a second region, and is careful to claim only the packaging, since the operators own the deflation.
+
+## Verification note
+
+Which figures were traced to which primary document, and which were not.
+
+**Traced to official operator records and filings (tier 1).**
+- *PJM Supply Side:* 8,253 project records and 837 GW total announced generation from PJM Planning *Serial Service Request Status* (the PlanningQueues export); 869 cluster project records (119 GW) from PJM *Cycle Service Request Status* (the CycleProjects export).
+- *PJM Load Side:* The 60 GW submitted, 38 GW proposed, and 32 GW firm 2030 large-load request curves from PJM Load Analysis Subcommittee, *Load Adjustment Requests Summary for the 2026 Load Forecast (Preliminary)* (24 November 2025; read from unlabelled bar charts on slides 7 and 8). The 60 / 38 / 32 GW 2030 values are read from the unlabelled bar charts on slides 7 and 8; PJM does not print them. They are stated to the nearest GW and should be treated as chart reads. The 50% probability rule, 70% capacity-to-demand utilization factor, and 2,600 MW to 1,260 MW worked example (48.5%) from PJM Resource Adequacy Planning, *Load Adjustment Request Implementation* (1 July 2025). The third haircut step on non-firm load (national average scaling / national constraints) from PJM LAS Summary, slides 6, 15, 18, 21, and 22. Downward forecast revisions (−2,564 MW for 2026 3rd IA, −4,414 MW for 2028 RPM Auction, −1,630 MW for 2031 RTEP) from PJM, *2026 Long-Term Load Forecast Report* (14 January 2026).
+
+**Traced via a named secondary to a named primary (tier 2).**
+- *ERCOT Load Side:* The 226 GW large-load queue (70-77% data centres) from ERCOT, *System Planning and Weatherization Update* (December 2025, via Belfer Center); 233 GW figure via Utility Dive (9 Dec 2025 board). The 5,302 MW (≈5.3 GW) energized figure from ERCOT, *Large Load Interconnection Process Q&A* (24 December 2025). The 49.8% realized per-site peak consumption from ERCOT, *Long-Term Load Forecast 2025* (non-crypto additions). The executed-agreement forecast requirement from ERCOT Market Notices *NPRR1234* and *PGRR115* (effective 15 December 2025).
+
+**Derived, with derivation shown.**
+- Mature cohort (2010-2017) realized completion: 46.5 GW built divided by 204.4 GW entered = 22.8%, decomposed into viability $r_2 = 38.0\text{-}39.1\%$ (77.7-80.0 GW reaching IA, depending on WMPA inclusion) and build $r_3 = 58.1\text{-}59.8\%$ (46.5 GW in service). Cluster de-duplication factor $r_1$: 0.921 (strict matching key, removing 7.9%) to 0.806 (loose matching key, removing 19.4%). Two-rail deliverable envelope: lower rail 20-22% (grid-physics base-rate proxy) to upper rail 48-63% (operator-vetted ceiling).
+
+**Secondary research and market benchmarks (tier 3).**
+- The 35 GW credible 2030 ERCOT data-centre scenario from Aurora Energy Research (*ERCOT Resource Adequacy Study*, commissioned by ERCOT, via Utility Dive; a commissioned forward model, not an operator measurement). National interconnection completion base rates (14-20%) from Lawrence Berkeley National Laboratory (*Queued Up*). PJM capacity auction price trajectory ($28.92 to $329.17/MW-day) from Institute for Energy Economics and Financial Analysis (IEEFA). Headline demand trajectories: IEA, *Electricity 2026* (485 to 950 TWh); private-capital commentary ($850B data-centre leases).
+
+**Not established here.**
+- Eventual commercial build-out or financial solvency for speculative projects that have not executed an interconnection agreement.
+
+## Conflict of interest and scope
+
+The research design, method, sourcing decisions and analytical judgements are the author's. Anthropic Opus 4.8-5.0 and Google Gemini 3.7 assisted with data retrieval, calculation, literature search, verification and drafting, so this text was artificially generated and was reviewed by the author before publication. The assisting models are not always neutral parties to the subject matter; Anthropic is a party to the AI data-centre buildout whose power demand this paper deflates, and appears among the private-capital announcements that motivate the headline demand figures. Google is a major hyper-scale data-centre developer, grid customer and power off-taker whose interconnection requests form part of the regional load queues examined here. Deflating AI power demand is not unambiguously for or against either commercial interest, but the assistance is disclosed for completeness. Guarantee: every measured claim is traced to the document named in the Verification note, at the tier stated there, and reproduce.py regenerates every supply-side table from the primary PJM planning data. Modelled or estimated inputs are identified as such in the Verification note rather than presented as measurements. A reader can check this without trusting either party.
+
+What the author cannot guarantee: a language model's output can be wrong in ways that survive review. In prose the error is locally plausible and consistent in tone with what surrounds it; in code it simply runs, and a wrong constant or a mis-set filter still returns a clean number. Several methods have been deployed to mitigate this, including explicit instructions, internal red-teaming and cross-lab blindspot checks, but the author does not claim the review is exhaustive. Corrections are logged against the DOI when surfaced. No warranty is offered beyond the terms of the CC BY 4.0 licence. Independent analysis and open-science documentation only, not investment advice.
+
+## Version history
+
+- **v1 (2026-08-16).** Full release combining supply-side generation and demand-side data-centre load (*Announced vs. Deliverable AI Power Demand*). Supersedes an interim draft circulated as 'Contingent vs. Robust AI Power Demand - v2' (June 2026); that working title and numbering are withdrawn and retired, and this v1 is the first release under the current title. Integrates three red-team passes: narrows the cross-region finding to the single empirical axis (metered 49.8% post-build utilization vs PJM's assumed 70%) and demotes the modelled forward comparison to context; identifies the national-average-scaling step PJM applies to non-firm load after ramp and utilization conformance, restating the aggregate-vs-worked-example gap accordingly; establishes from PJM's documentation that Proposed and Firm curves are demand-basis while Submitted is requested capacity, stating the resulting denominator asymmetry in the two-rail envelope; notes that the 60 / 38 / 32 GW headline values are chart reads from unlabelled operator bar charts; sets the upper rail to ≈48-63%; discloses WMPA inclusion with a measured sensitivity; removes non-funnel rows from the ERCOT aggregate CSV; and extends check_claims.py to cover paper prose, CSV units, and passport tier agreement.
+- **v0.1 (2026-06-15, record DOI 10.5281/zenodo.20706509, concept DOI 10.5281/zenodo.20559430).** Initial proof-of-method on PJM generation supply queue (22.8% realized completion on 2010-2017 mature cohort; cluster de-duplication bracket r1 = 0.81 to 0.92).

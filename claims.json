@@ -1,0 +1,230 @@
+{
+  "_about": "Machine-readable claims passport for 'Announced vs. Deliverable AI Power Demand v1'. Canonical source for every headline figure: value, source, motive-tier, reproducibility-tier, uncertainty, and the specific misreads to avoid. Intended for AI summarizers, human reviewers, and the author's own verification pass. Figures cross-checked against the published CSVs by check_claims.py. If this file and the paper ever disagree, treat the disagreement as a bug, not a choice.",
+  "work": {
+    "title": "Announced vs. Deliverable AI Power Demand",
+    "version": "v1",
+    "date": "2026-08-16",
+    "author": "NM AI Research",
+    "orcid": "0009-0003-4213-7769",
+    "license": "CC-BY-4.0",
+    "doi_note": "v0.1 paper record 10.5281/zenodo.20706509; concept DOI 10.5281/zenodo.20559430.",
+    "methods_precedent": "10.5281/zenodo.20512703 (bot-energy paper)",
+    "thesis": "Announced capacity is a scenario, not a baseline. v1 deflates it on both sides of the meter (generation supply and data-centre load) using the grid operators' own resolved data.",
+    "contribution": "Not the deflation (the operators do that and publish it) but its packaging: a reproducible, cross-region, motive-neutral referee plus a two-rail energisation bracket that names every assumption."
+  },
+  "tier_legend": {
+    "reproducibility": {
+      "computed": "produced by reproduce.py from primary data (the restricted PJM serial export); reproducible only with that access",
+      "transcribed": "transcribed verbatim from a cited primary operator document",
+      "secondary": "from a reputable secondary that quotes the primary figure",
+      "proxy": "borrowed from an adjacent measured rate; labelled, not measured for this object"
+    },
+    "motive": {
+      "1": "primary filing or regulator",
+      "2": "operator/issuer self-report",
+      "3": "independent analyst or academic",
+      "4": "trade press",
+      "5": "seller marketing"
+    }
+  },
+  "provenance_notes": {
+    "ercot_access": "ERCOT's CDN blocked direct document fetch during preparation. ERCOT primary figures (226 GW, 49.8%, 5,302 MW, the PGRR115 gate) were obtained from reputable secondaries that quote the ERCOT primary documents by name (Belfer Center, Utility Dive, Latitude Media, WECC). Each is reproducible by anyone who opens the named ERCOT filing directly. Reproducibility tiers below reflect this access path honestly.",
+    "pjm_load": "PJM load-side figures are transcribed from public PJM documents (Load Adjustment Request Implementation 1 Jul 2025; LAS Large Load Requests Summary 24 Nov 2025; 2026 LTLF posted 14 Jan 2026); no redistribution-restricted file is needed.",
+    "pjm_supply": "PJM supply-side figures are computed by reproduce.py from the redistribution-restricted PJM serial export; the script and derived aggregates are public, the raw export is not."
+  },
+  "claims": [
+    {
+      "id": "supply.completion.headline",
+      "side": "supply", "region": "PJM",
+      "statement": "Realized announced-to-in-service completion for the mature 2010-2017 cohort (MW-Energy, In-Service-only).",
+      "value": 22.8, "unit": "percent",
+      "source": "PJM Serial Service Request Status (8,253 generation projects, ~837 GW announced)",
+      "motive_tier": 1, "reproducibility": "computed",
+      "uncertainty": "Band 16-25% across mature cohorts; 24.8% on a MW-Capacity basis. A historical generation base rate, not AI-serving capacity.",
+      "do_not_misread": "This is the supply (generation) side, not the data-centre demand figure."
+    },
+    {
+      "id": "supply.completion.band",
+      "side": "supply", "region": "PJM",
+      "statement": "Mature-cohort realized completion converges to roughly one announced MW in five.",
+      "value": [16, 25], "unit": "percent",
+      "source": "PJM serial queue, cohorts <=2009 through 2015-17",
+      "motive_tier": 1, "reproducibility": "computed",
+      "uncertainty": "Directionally corroborated, not like-for-like, by LBNL Queued Up (~14-20% national) and Exelon (~22% of company pipeline).",
+      "do_not_misread": "Report the band, not a point."
+    },
+    {
+      "id": "supply.r2.viability",
+      "side": "supply", "region": "PJM",
+      "statement": "Share of entered MW reaching an executed interconnection agreement.",
+      "value": [38, 39], "unit": "percent",
+      "source": "PJM serial queue funnel, 2010-2017 cohort (204 GW entered)",
+      "motive_tier": 1, "reproducibility": "computed",
+      "uncertainty": "61-62% of MW exit before a signed agreement; r2 is 39.1% including interim WMPAs, 38.0% excluding them; largest single drop at System Impact Study (28pp).",
+      "do_not_misread": "r2 x r3 = built/entered is an identity, not an independent check."
+    },
+    {
+      "id": "supply.r3.build",
+      "side": "supply", "region": "PJM",
+      "statement": "Share of IA-executed MW that reach In Service.",
+      "value": [58, 60], "unit": "percent",
+      "source": "PJM serial queue funnel, 2010-2017 cohort",
+      "motive_tier": 1, "reproducibility": "computed",
+      "uncertainty": "A signed agreement converted to service 58.1% of the time (59.8% under strict IA definition) on this cohort.",
+      "do_not_misread": null
+    },
+    {
+      "id": "supply.dedup.r1",
+      "side": "supply", "region": "PJM",
+      "statement": "Literal duplicate filings removed on the post-2023 AI-era cluster cohort.",
+      "value": [0.81, 0.92], "unit": "ratio_retained",
+      "source": "PJM Cycle Service Request Status (869 non-zero-MW projects, 119 GW)",
+      "motive_tier": 1, "reproducibility": "computed",
+      "uncertainty": "Literal duplication removes ~8% of MW (strict key), rising to ~19% under an over-broad developer-county aggregation; the cohort has already shed 63% of MW. Inflation is viability/withdrawal-driven, not duplication-driven.",
+      "do_not_misread": "Do not read the '5-10x phantom' prior as literal duplicates; it is too high under that narrow reading."
+    },
+    {
+      "id": "load.pjm.submitted_2030",
+      "side": "load", "region": "PJM",
+      "statement": "PJM large-load demand requested for 2030 (submitted).",
+      "value": 60, "unit": "GW",
+      "source": "PJM LAS Large Load Requests Summary, 24 Nov 2025 (read from unlabelled bar chart)",
+      "motive_tier": 2, "reproducibility": "chart_read",
+      "uncertainty": "Rises to ~115 GW by 2046. The contaminated headline, not a baseline. Read from unlabelled bar chart.",
+      "do_not_misread": null,
+      "csv_check": { "file": "dc_funnel.csv", "stage_contains": "Submitted", "column": "gw_2030" }
+    },
+    {
+      "id": "load.pjm.accepted_2030",
+      "side": "load", "region": "PJM",
+      "statement": "PJM-accepted (Proposed) large-load forecast for 2030 after vetting.",
+      "value": 38, "unit": "GW",
+      "source": "PJM LAS Summary, 24 Nov 2025 (Proposed line; read from unlabelled bar chart)",
+      "motive_tier": 2, "reproducibility": "chart_read",
+      "uncertainty": "~63% of submitted survives into the forecast. Read from unlabelled bar chart.",
+      "do_not_misread": "Accepted into the forecast is not the same as energised.",
+      "csv_check": { "file": "dc_funnel.csv", "stage_contains": "Proposed", "column": "gw_2030" }
+    },
+    {
+      "id": "load.pjm.firm_2030",
+      "side": "load", "region": "PJM",
+      "statement": "Firm (ESO/CC-backed) large load that counts toward capacity, 2030.",
+      "value": 32, "unit": "GW",
+      "source": "PJM LAS Summary, 24 Nov 2025 (slides 4, 8, 14; read from unlabelled bar chart)",
+      "motive_tier": 2, "reproducibility": "chart_read",
+      "uncertainty": "~53% of request at the long-run plateau; non-firm de-rated >50% (AEP example). Read from unlabelled bar chart.",
+      "do_not_misread": null,
+      "csv_check": { "file": "dc_funnel.csv", "stage_contains": "Firm", "column": "gw_2030" }
+    },
+    {
+      "id": "load.pjm.worked_example_survival",
+      "side": "load", "region": "PJM",
+      "statement": "Share of requested capacity that survives PJM's applied de-rate into the forecast (worked example).",
+      "value": 48, "unit": "percent",
+      "source": "PJM Load Adjustment Request Implementation, 1 Jul 2025 (2,600 MW -> 1,800 -> 1,260 MW demand)",
+      "motive_tier": 2, "reproducibility": "transcribed",
+      "uncertainty": "Applied de-rate = probability ~0.69 x utilization 0.70. The worked example omits the national-average-scaling step PJM applies to non-firm after conformance; aggregate non-firm survival at 2030 is ~21%, implying a scaling factor of ~0.44.",
+      "do_not_misread": "Constructed differently from ERCOT's realized 49.8% (see cross_region)."
+    },
+    {
+      "id": "load.pjm.energisation_proxy",
+      "side": "load", "region": "PJM",
+      "statement": "Lower-rail energisation proxy for data-centre load (no matured load cohort exists yet).",
+      "value": 22, "unit": "percent",
+      "source": "Generation-queue historical completion (Contingent v0.1 / LBNL Queued Up)",
+      "motive_tier": 1, "reproducibility": "proxy",
+      "uncertainty": "Range ~20-22%. A labelled proxy that transfers on shared grid bottlenecks (network upgrades, substation capacity, transformer lead times), not a measured load-completion rate.",
+      "do_not_misread": "This is a floor borrowed from the supply side, not a measured data-centre energisation rate.",
+      "csv_check": { "file": "dc_funnel.csv", "stage_contains": "Energized", "column": "pct_of_submitted" }
+    },
+    {
+      "id": "load.ercot.requested",
+      "side": "load", "region": "ERCOT",
+      "statement": "ERCOT large-load interconnection queue (Dec 2025).",
+      "value": 226, "unit": "GW",
+      "source": "ERCOT System Planning and Weatherization Update, Dec 2025 (~233 GW cited at the 9 Dec board)",
+      "motive_tier": 2, "reproducibility": "secondary",
+      "uncertainty": "~70-77% from data centres; up from ~63 GW at end-2024. ERCOT states most 'will not materialize'.",
+      "do_not_misread": "A maximally-padded queue (near-zero historical barrier to entry), not a demand forecast.",
+      "csv_check": { "file": "ercot_funnel.csv", "stage_contains": "Requested", "column": "gw" }
+    },
+    {
+      "id": "load.ercot.realized_derate",
+      "side": "load", "region": "ERCOT",
+      "statement": "Realized per-site de-rate: actual peak consumption as a share of requested MW, for data centres with 2022-2024 in-service dates.",
+      "value": 49.8, "unit": "percent",
+      "source": "ERCOT Long-Term Load Forecast 2025 (non-crypto data-centre additions)",
+      "motive_tier": 2, "reproducibility": "secondary",
+      "uncertainty": "A related ERCOT figure (WECC Fig 2.2) shows 58-78% of requested transmission service used on peak within a year (ramp/utilization). Conditional on the project being built.",
+      "do_not_misread": "Conditional-on-built utilization, distinct from request survival (~15%)."
+    },
+    {
+      "id": "load.ercot.energized",
+      "side": "load", "region": "ERCOT",
+      "statement": "Large load approved-and-observed energized to date.",
+      "value": 5.3, "unit": "GW",
+      "value_exact_mw": 5302,
+      "source": "ERCOT Large Load Interconnection Process Q&A, 24 Dec 2025 (as of 18 Nov 2025)",
+      "motive_tier": 2, "reproducibility": "secondary",
+      "uncertainty": "~2% of ERCOT's large-load tracking.",
+      "do_not_misread": "An AGE figure, not a failure rate. The surge began 2024-25 and large loads take years to build/ramp, so a low energised share is expected. Reading 2% as '98% will fail' is the misread the three-quantity split prevents.",
+      "csv_check": { "file": "ercot_funnel.csv", "stage_contains": "Energized", "column": "gw" }
+    },
+    {
+      "id": "load.ercot.credible_2030",
+      "side": "load", "region": "ERCOT",
+      "statement": "Credible 2030 data-centre load scenario.",
+      "value": 35, "unit": "GW",
+      "source": "Aurora Energy Research resource-adequacy study commissioned by ERCOT",
+      "motive_tier": 3, "reproducibility": "secondary",
+      "uncertainty": "~15% of the requested queue; ~10x today's operational data-centre load.",
+      "do_not_misread": null,
+      "csv_check": { "file": "ercot_funnel.csv", "stage_contains": "Credible", "column": "gw" }
+    },
+    {
+      "id": "load.ercot.forecast_gate",
+      "side": "load", "region": "ERCOT",
+      "statement": "Going forward, only executed-agreement load enters ERCOT's large-load forecast.",
+      "value": null, "unit": "rule",
+      "source": "ERCOT NPRR1234 / PGRR115, effective 15 Dec 2025; Texas SB6 (upfront study fees, duplicate-request disclosure); PUCT rulemaking due Dec 2026",
+      "motive_tier": 1, "reproducibility": "secondary",
+      "uncertainty": "ERCOT analog of PJM's Firm (ESO/CC) gate.",
+      "do_not_misread": "A filter, not a guarantee of viability; it moves the failure point earlier rather than removing it."
+    }
+  ],
+  "cross_region": {
+    "statement": "On the one axis where PJM and ERCOT are comparable like-for-like, ERCOT's metered post-build utilization (49.8%) falls well below PJM's assumed capacity-to-demand factor (70%).",
+    "empirical_axis": {
+      "pjm_assumed_utilization": 0.70,
+      "ercot_metered_peak": 0.498,
+      "ratio": 1.41,
+      "basis": "PJM forward assumption vs ERCOT metered per-site peak / requested MW, non-crypto data centres in service 2022-2024"
+    },
+    "forward_axis_not_compared": {
+      "pjm_accepted": 0.63,
+      "pjm_firm": 0.53,
+      "ercot_aurora_scenario": 0.155,
+      "why_not_compared": "PJM's figure is administrative vetting; ERCOT's is a commissioned scenario model (Aurora, motive tier 3). Both are planning judgements, not measurements, so the ~4x gap between them is not evidence that either is correct."
+    },
+    "relationship": "single_empirical_axis_comparison",
+    "do_not_misread": "Do not present the forward figures (63% vs 15%) as a cross-region empirical finding: both are modelled. Do not treat ERCOT's 49.8% as request survival. Do not use ERCOT's 15% in the section 9 bracket."
+  },
+  "band": {
+    "statement": "Deliverable band for announced data-centre demand.",
+    "lower": 0.20, "upper": 0.63, "upper_low_end": 0.48, "unit": "ratio",
+    "lower_basis": "energisation floor from generation-queue completion (~20-22%), a labelled proxy",
+    "upper_basis": "operator-accepted ceiling from PJM only (~63% accepted, ~53% firm, ~48% worked example). ERCOT contributes no figure to this rail: its 15% is a commissioned model and its 49.8% measures post-build utilization, not survival into a forecast.",
+    "note": "The band deliberately spans the regime change (old lightly-gated queue floor to newly-vetted operator acceptance). Lower rail is capacity-basis; upper rail is demand-basis (derived from PJM curves applying a 70% capacity-to-demand factor to requested capacity). ERCOT's ~2% energised-to-date is an age artefact reflecting early buildout."
+  },
+  "known_misreads": [
+    "Stating the paper/author 'deflated the load': on the load side the OPERATORS deflate and publish; the contribution is the cross-region packaging and bracket.",
+    "Treating PJM's ~48% worked example as the rate PJM actually applies to non-firm load in aggregate: the worked example omits the national-scaling step, and realized non-firm survival at 2030 is ~21%.",
+    "Presenting the forward figures (PJM 63% vs ERCOT 15%) as a cross-region empirical finding (both are modelled).",
+    "Treating ERCOT's 49.8% realized peak as request survival.",
+    "Reading ERCOT's ~2% energised as a ~98% failure rate (it is an age/timing figure).",
+    "Quoting a single point instead of the band (the output is a band with its softest input named).",
+    "Calling this a crash, bubble, or short thesis (it is method-first and agnostic; the contingent-vs-deliverable split holds either way).",
+    "Treating v1 as supply-only (v1 covers both supply and load).",
+    "Treating ~950 TWh (IEA Electricity 2026) or '$850B announced leases' as a baseline (it is a scenario; operators haircut large-load queues significantly)."
+  ]
+}

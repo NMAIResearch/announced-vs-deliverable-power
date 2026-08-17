@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contingent vs Robust AI Power Demand — interactive</title>
+<title>Announced vs. Deliverable AI Power Demand (interactive)</title>
 <style>
   :root{
     --navy:#1a365d; --slate:#4a5568; --body:#2d3748; --alt:#f7fafc;
@@ -89,16 +89,17 @@
 <body>
 <div class="wrap">
   <p style="margin:0 0 10px;font-size:13px"><a href="https://nmairesearch.github.io/" style="color:var(--accent);text-decoration:none">&larr; NM AI Research · research portfolio</a></p>
-  <h1>Contingent vs Robust AI Power Demand</h1>
-  <p class="sub">How much <em>announced</em> generation capacity actually gets <em>built</em> — a realized-completion anchor from the PJM interconnection queue. <em>Announced is not deliverable.</em></p>
-  <p class="stamp">Interactive front-end over the published v0.1 aggregates · data as of 2026-06 · canonical record: <a href="https://doi.org/10.5281/zenodo.20559430" target="_blank" rel="noopener">DOI 10.5281/zenodo.20559430</a> · NM AI Research, ORCID 0009-0003-4213-7769 · CC BY 4.0</p>
+  <h1>Announced vs. Deliverable AI Power Demand</h1>
+  <p class="sub">How much <em>announced</em> capacity is actually <em>deliverable</em>: on both sides of the meter, the <em>generation</em> that gets built (the PJM completion anchor) and the data-centre <em>load</em> that survives grid operators' screens (PJM + ERCOT). <em>Announced is a scenario, not a baseline.</em></p>
+  <p class="stamp">Interactive front-end over published aggregates · v1 (combines supply and load sides) · canonical concept: <a href="https://doi.org/10.5281/zenodo.20559430" target="_blank" rel="noopener">DOI 10.5281/zenodo.20559430</a> · v1 paper: <a href="https://doi.org/10.5281/zenodo.21971645" target="_blank" rel="noopener">DOI 10.5281/zenodo.21971645</a> · NM AI Research, ORCID 0009-0003-4213-7769 · CC BY 4.0</p>
 
   <div class="controls">
     <div class="ctl">
       <label>View</label>
       <div class="seg" id="view">
         <button data-v="calc" class="on">Deflation calculator</button>
-        <button data-v="evidence">PJM evidence</button>
+        <button data-v="evidence">PJM supply evidence</button>
+        <button data-v="load">Data-centre load</button>
       </div>
     </div>
   </div>
@@ -137,27 +138,48 @@
 
   <!-- EVIDENCE -->
   <div class="panel" id="p-evidence">
-    <h3>The completion funnel — 2010–2017 cohort, 204 GW entered</h3>
+    <h3>The completion funnel (2010–2017 cohort, 204 GW entered)</h3>
     <p class="dim">Each milestone is conditional on surviving the previous one, so the rates multiply. The steepest drop is at the System Impact Study, where a project learns its share of network-upgrade costs.</p>
     <table><thead><tr><th>Stage</th><th class="num">% of entered</th><th></th><th>what it is</th></tr></thead>
       <tbody id="funnel-rows"></tbody></table>
     <p class="dim"><b>Where the MW die:</b> 61% of announced MW exit <em>before</em> a signed agreement; another 13% exit <em>after</em> one (a signed IA converted to service only ~58% of the time). The gap is viability and build, not paperwork.</p>
 
     <h3>Realized completion by submitted cohort</h3>
-    <p class="dim">Recent cohorts read low only because they have not had time to resolve, so the headline uses the mature, near-fully-resolved windows (bold). Those converge on ~16–25% built — about one announced MW in five.</p>
+    <p class="dim">Recent cohorts read low only because they have not had time to resolve, so the headline uses the mature, near-fully-resolved windows (bold). Those converge on ~16–25% built, about one announced MW in five.</p>
     <table><thead><tr><th>Cohort</th><th class="num">% built</th><th></th><th class="num">% withdrawn</th><th>maturity</th></tr></thead>
       <tbody id="cohort-rows"></tbody></table>
   </div>
 
+  <!-- DATA-CENTRE LOAD (v1) -->
+  <div class="panel" id="p-load">
+    <p class="dim" style="margin-top:14px">On the load side the operators deflate the headline themselves and publish the method. This view does not deflate the load: it places PJM's and ERCOT's own published vetting side by side, and brackets the result. <b>The contribution is the cross-region, reproducible packaging, not the deflation.</b></p>
+
+    <h3>PJM: the published large-load funnel (2030 horizon)</h3>
+    <p class="dim">PJM accepts a request into its forecast only after a documented haircut (50% default non-firm probability, 70% utilization, 70% capacity-to-demand, minimum 36-month ramp); only the Firm subset (backed by an Electric Service Obligation or Construction Commitment) counts toward capacity. Its worked example survives at ≈48% of requested capacity.</p>
+    <table><thead><tr><th>Stage</th><th class="num">2030 GW</th><th class="num">% of submitted</th><th></th><th>what it is</th></tr></thead>
+      <tbody id="pjm-load-rows"></tbody></table>
+
+    <h3>ERCOT: the cross-region check</h3>
+    <p class="dim">ERCOT had almost no barrier to entry before its PGRR115 rules, so its queue was heavily padded. It publishes a <em>realized</em> de-rate: actual per-site peak consumption is 49.8% of requested MW. Three quantities must be kept apart: request-survival (≈50%), realized utilization (49.8%), and energized-to-date (≈2%, an <em>age</em> figure: the surge is too young to have built out, not a failure rate).</p>
+    <table><thead><tr><th>Stage</th><th class="num">GW</th><th class="num">% of requested</th><th></th><th>what it is</th></tr></thead>
+      <tbody id="ercot-load-rows"></tbody></table>
+
+    <h3>The two-rail energisation bracket</h3>
+    <p class="dim">No matured data-centre load cohort has resolved yet, so the deliverable rate is bracketed, not measured. The band spans the regime change: the lower rail is the lightly-gated queue's historical completion; the upper rail is the operators' newly-vetted acceptance.</p>
+    <table><thead><tr><th>Rail</th><th class="num">Survives</th><th>basis</th></tr></thead>
+      <tbody id="bracket-rows"></tbody></table>
+    <p class="dim"><b>Cross-region finding:</b> two independent operators, PJM applying a forward de-rate (≈48%) and ERCOT measuring a realized one (49.8%), land near half of requested data-centre demand surviving the first credible screen, and both now gate the forecast on an executed agreement. The two ≈50% figures are constructed differently (PJM's bundles a completion-probability factor; ERCOT's is conditional on the project being built), so the resulting claim is structural, not a numeric identity.</p>
+  </div>
+
   <div class="foot">
     <p><b>What this is.</b> A realized announced-to-in-service completion rate from PJM's own resolved serial queue (8,253 generation projects, ~837 GW announced). The calculator lets you deflate any announced headline through the three measured attrition stages and watch the deliverable move. Defaults are the PJM mature-cohort base rate; the sliders are for sensitivity, not invention.</p>
-    <p><b>The load-bearing assumption.</b> The mature 2010–2017 cohort is <em>generic historical generation</em> (wind/solar/gas) used as a completion base rate — not capacity announced to serve AI. Transferring that rate to the AI-era cohort is the named assumption (cohort comparability); FERC Order 2023 could raise completion, speculation could lower it.</p>
-    <p><b>Supply, not demand.</b> This deflates the generation side, not the ~950 TWh demand headline. De-duplication barely moves the result (r1 ≈ 0.81–0.92): the gap is overwhelmingly viability and build. "Built" counts only In Service (conservative, biases the rate down). The output is a band with the announced-vs-deliverable gap as the softest input — treat any headline as a scenario, not a baseline.</p>
-    <details><summary>Guardrails — read before citing</summary>
-      <p style="margin-top:10px">No raw PJM data is bundled here (it carries a redistribution restriction); only the published derived aggregates. The full method reads a locally-obtained PJM export — see the Zenodo record. r2 × r3 = built/entered is an algebraic identity, not an independent check. Anchors (LBNL ~14–20% national; Exelon ~22% of company pipeline) are loosely comparable, not like-for-like.</p>
+    <p><b>The load-bearing assumption.</b> The mature 2010–2017 cohort is <em>generic historical generation</em> (wind/solar/gas) used as a completion base rate, not capacity announced to serve AI. Transferring that rate to the AI-era cohort is the named assumption (cohort comparability); FERC Order 2023 could raise completion, speculation could lower it.</p>
+    <p><b>Both sides of the meter (v1).</b> The calculator and PJM evidence deflate the <em>supply</em> side (generation that gets built); de-duplication barely moves it (r1 ≈ 0.81–0.92): the gap is overwhelmingly viability and build, and "Built" counts only In Service (conservative). The <em>Data-centre load</em> view adds the demand side, where the operators do the deflation themselves: this tool packages PJM's and ERCOT's own published vetting and brackets it, rather than deflating the ~950 TWh headline itself. The two ≈50% first-screen figures (PJM applied, ERCOT realized) are constructed differently, so the cross-region claim is structural. Every output is a band with its softest input named: treat any headline as a scenario, not a baseline.</p>
+    <details><summary>Guardrails (read before citing)</summary>
+      <p style="margin-top:10px">No raw PJM data is bundled here (it carries a redistribution restriction); only the published derived aggregates. The full method reads a locally-obtained PJM export; see the Zenodo record. r2 × r3 = built/entered is an algebraic identity, not an independent check. Anchors (LBNL ~14–20% national; Exelon ~22% of company pipeline) are loosely comparable, not like-for-like.</p>
     </details>
     <p style="margin-top:12px"><b>Disclosure.</b> No third party reviewed, funded, or directed this work. Independent analysis, not investment advice.</p>
-    <p><b>Reproducibility.</b> This page embeds the published aggregates (<code>funnel.csv</code>, <code>cohorts.csv</code>) verbatim, regenerated by <code>build.py</code>; the full <code>reproduce.py</code> and write-up live in the <a href="https://doi.org/10.5281/zenodo.20559430" target="_blank" rel="noopener">Zenodo record</a>.</p>
+    <p><b>Reproducibility.</b> This page embeds the published aggregates (<code>funnel.csv</code>, <code>cohorts.csv</code>, and load-side <code>dc_funnel.csv</code>, <code>ercot_funnel.csv</code>) verbatim, regenerated by <code>build.py</code>; full <code>reproduce.py</code> and write-up live in the <a href="https://doi.org/10.5281/zenodo.20559430" target="_blank" rel="noopener">Zenodo record</a>.</p>
   </div>
 </div>
 
@@ -175,6 +197,16 @@ const COHORTS = `cohort,pct_resolved,pct_built,pct_withdrawn,maturity
 2015-17,92,20,71,mature
 2018-20,75,3,72,still building
 2021-25,84,0,84,too new (already shed 84%)`;
+const DCPJM = `stage,gw_2030,pct_of_submitted,basis,source,motive_tier,reproducibility_tier,methodology_trace,data_governance_notes
+Submitted (requested demand),60,100,large-load demand requests for 2030 (RTO); rises to ~115 GW by 2046,"PJM LAS Large Load Adjustment Requests Summary 24 Nov 2025 (slides 3 and 7)",2,chart_read,"Raw submitted interconnection requests submitted by Electric Distribution Companies (EDCs) and Load Serving Entities (LSEs) prior to administrative haircuts or capacity qualification; read from unlabelled bar chart.","PJM Interconnection planning data; public aggregate; no redistribution restriction."
+Proposed / PJM-accepted (preliminary),38,63,"PJM accepted forecast after vetting: 50% default non-firm probability + 70% utilization + min 36-month ramp + national scaling; ~115 GW falls to ~88 GW by 2046","PJM LAS Summary 24 Nov 2025 (slide 7, 'Proposed' line)",2,chart_read,"Administrative filter applied by PJM Resource Adequacy Planning applying default probability factors for non-firm requests, 70% capacity-to-demand utilization, and national average scaling; read from unlabelled bar chart.","Published in 2026 preliminary load forecast dataset."
+"PJM data-centre growth 2025-30 (benchmark, not a funnel step)",30,50,"PJM statement (~40% of US data centres in 2025); benchmark subset, not a sequential funnel step","PJM LAS Summary 24 Nov 2025 (slide 5)",2,transcribed,"Specific data-centre subsegment projection cross-checked by PJM against third-party industry benchmarks including Financial Times, Deloitte, BCG, McKinsey and BloombergNEF.","Published in LAS summary slide deck."
+Firm only (ESO/CC-backed - impacts RPM/capacity),32,53,"only Electric-Service-Obligation / Construction-Commitment-backed load counts toward capacity; Non-Firm de-rated >50% (AEP). ~53% of request at the long-run plateau (115 submitted vs ~61 firm by 2046)","PJM LAS Summary 24 Nov 2025 (slides 4, 8, 14)",2,chart_read,"Contractually committed load qualifying under PJM tariff rules for capacity obligation and Base Residual Auction reliability pricing model; read from unlabelled bar chart.","Published in LAS preliminary load forecast documentation."
+Energized (deliverable PROXY - not measured),13,22,"NO matured data-centre LOAD cohort exists yet; lower-rail proxy = PJM generation-queue historical completion ~20-22%","Contingent v0.1 (funnel.csv/cohorts.csv) / LBNL Queued Up",1,proxy,"Derived lower-rail proxy grounded in physical transmission bottlenecks (network upgrade costs, step-up transformer supply chain, substation capacity) clearing the same high-voltage interconnection points.","Derived aggregate from primary PJM planning records and LBNL national benchmark."`;
+const DCERCOT = `stage,gw,pct_of_requested,basis,source,motive_tier,reproducibility_tier,methodology_trace,data_governance_notes
+Requested (large-load interconnection queue),226,100,"Dec 2025 large-load interconnection queue volume; ~70-77% from data centres; up from ~63 GW at end-2024; ERCOT states most 'will not materialize'","ERCOT System Planning and Weatherization Update, Dec 2025 (via Belfer Center); Utility Dive cites ~233 GW at the 9 Dec 2025 ERCOT board meeting",2,secondary,"Raw unvetted large-load request tracking across the ERCOT interconnection queue prior to the PGRR115 and NPRR1234 market gate implementation. Represents a maximally padded queue due to near-zero historical barrier to entry and lack of upfront deposit requirements.","Public operator tracking cited in secondary regulatory analysis and board reports; unvetted submission volume without contractual commitments."
+Credible 2030 data-centre scenario,35,15,"ERCOT-commissioned resource-adequacy scenario modelling; represents ~10x today's operational data-centre load","Aurora Energy Research Resource Adequacy study for ERCOT (via Utility Dive)",3,secondary,"Independent resource adequacy forward scenario modelling commissioned by ERCOT estimating deliverable operational large-load capacity under transmission, generation buildout, and lead-time constraints; a commissioned scenario model, not an empirical measurement.","Commissioned consulting study for ERCOT board planning; scenario projection rather than realized measurement."
+Energized to date,5.3,2,"large loads approved-and-observed-energized since 2022, as of 18 Nov 2025 = 5,302 MW (~2% of ERCOT large-load tracking); timing-limited, NOT a completion rate","ERCOT Large Load Interconnection Process Q&A, 24 Dec 2025",2,secondary,"Observed operational energisation tracking reflecting early buildout timing, site preparation, substation construction, and multi-year lead times rather than eventual terminal project attrition. Represents an age artefact of an early-stage cohort.","Official ERCOT Q&A disclosure; primary operator snapshot of operational status across the ERCOT footprint."`;
 
 function parseCSV(t){
   const rows=[]; let i=0,f='',row=[],q=false;
@@ -225,12 +257,12 @@ function renderWF(){
   const preIA = A - iaG, postIA = iaG - built;
   const ratio = built>0? (A/built):0;
   document.getElementById('spot').innerHTML =
-    'Of <b>'+gw(A)+' GW</b> announced, <b>'+gw(built)+' GW</b> is deliverable — <b>'+pct.toFixed(1)+'%</b>'+
+    'Of <b>'+gw(A)+' GW</b> announced, <b>'+gw(built)+' GW</b> is deliverable: <b>'+pct.toFixed(1)+'%</b>'+
     (ratio? ', about <b>1 in '+ratio.toFixed(1)+'</b>' : '')+'. '+
     'Biggest leak: the viability screen before a signed agreement loses <b>'+gw(preIA)+' GW</b>'+
     '; post-agreement non-build loses another '+gw(postIA)+' GW. '+
     (Math.abs(state.r1-DEF.r1)<1e-9&&Math.abs(state.r2-DEF.r2)<1e-9&&Math.abs(state.r3-DEF.r3)<1e-9
-      ? '<i>(PJM measured base rate.)</i>' : '<i>(your scenario — reset for the PJM measured base rate.)</i>');
+      ? '<i>(PJM measured base rate.)</i>' : '<i>(your scenario; reset for the PJM measured base rate.)</i>');
 }
 function renderEvidence(){
   document.getElementById('funnel-rows').innerHTML = funnel.map(f=>
@@ -245,17 +277,44 @@ function renderEvidence(){
       '<td class="num">'+c.withdrawn+'%</td><td class="dim">'+c.maturity+'</td></tr>'; }).join('');
 }
 
+function loadRows(csv, gwKey, pctKey){
+  return toObj(csv).map(o=>{
+    const pct = Number(o[pctKey]);
+    return '<tr><td>'+o.stage+'</td><td class="num">'+o[gwKey]+'</td>'+
+      '<td class="num">'+o[pctKey]+'%</td>'+
+      '<td><div class="minibar"><div class="fill" style="width:'+Math.max(0,Math.min(100,pct))+'%"></div></div></td>'+
+      '<td class="dim">'+o.basis+'</td></tr>';
+  }).join('');
+}
+function renderLoad(){
+  document.getElementById('pjm-load-rows').innerHTML = loadRows(DCPJM,'gw_2030','pct_of_submitted');
+  document.getElementById('ercot-load-rows').innerHTML = loadRows(DCERCOT,'gw','pct_of_requested');
+  const bracket=[
+    ['Upper rail (operator-accepted)','≈48–63%','PJM ≈63% of 2030 submitted into the forecast (Firm-only ≈53%); ERCOT realized 49.8% per-site'],
+    ['Lower rail (energisation proxy)','≈20–22%','generation-queue historical completion (v0.1 / LBNL), transferred on the shared-grid channel; a labelled proxy, no load cohort has resolved'],
+  ];
+  document.getElementById('bracket-rows').innerHTML = bracket.map(b=>
+    '<tr><td>'+b[0]+'</td><td class="num">'+b[1]+'</td><td class="dim">'+b[2]+'</td></tr>').join('');
+}
+
 let view='calc';
 function render(){
   document.getElementById('p-calc').classList.toggle('on', view==='calc');
   document.getElementById('p-evidence').classList.toggle('on', view==='evidence');
+  document.getElementById('p-load').classList.toggle('on', view==='load');
   if(view==='calc'){ renderWF(); }
-  else {
+  else if(view==='evidence'){
     renderEvidence();
     document.getElementById('spot').innerHTML =
       'The PJM serial queue is a funnel most projects leave: <b>61%</b> of announced MW exit before a signed '+
       'agreement, the steepest drop at the cost-revealing System Impact Study. Mature cohorts converge on '+
-      '<b>~16–25% built</b> — about one announced MW in five.';
+      '<b>~16–25% built</b>, about one announced MW in five.';
+  }
+  else if(view==='load'){
+    renderLoad();
+    document.getElementById('spot').innerHTML =
+      'Across two grid operators, requested data-centre demand is heavily screened: PJM accepts ≈63% into the forecast (firm-only ≈53%, worked example ≈48%) and ERCOT measures 49.8% realized peak on built sites against PJM\'s assumed 70%. Two-rail envelope runs ≈20% (historical completion floor) to ≈48–63% (operator-accepted ceiling). '+
+      '<b>Announced is a scenario, not a baseline.</b>';
   }
 }
 

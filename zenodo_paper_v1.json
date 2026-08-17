@@ -1,0 +1,45 @@
+{
+  "_note": "PAPER record new-version spec for zenodo_upload.py. Run from this folder: python3 '/home/Noel/Desktop/House style/zenodo_upload.py' zenodo_paper_v1.json --newversion <RECORD_ID> (add --publish only after eyeballing the draft). Stops at draft by default.",
+  "_target_record_caveat": "CONFIRM the record id before minting. The resume note says --newversion 20706509 (the v0.1 PAPER). But index.html cites 20559430 as 'canonical record' and the interactive .zenodo.json marks the interactive as isSupplementTo 20559430. These look like two separate records (paper 20706509 vs interactive 20559430). Check zenodo.org to confirm 20706509 is the paper series, then use that id here. Do NOT version the interactive record with this paper spec.",
+  "_concept_doi": "10.5281/zenodo.20559430",
+  "_cite_concepts": ["10.5281/zenodo.20512703"],
+  "_drafting_vendors": ["Anthropic", "Google"],
+  "_files_to_assemble": "All _files must exist in this folder at mint time (--newversion REPLACES inherited files). paper_v1.pdf is generated from paper_v1.md via render_pdf.sh.",
+  "_files": [
+    "paper_v1.md",
+    "paper_v1.pdf",
+    "reproduce.py",
+    "dc_funnel.csv",
+    "ercot_funnel.csv",
+    "claims.json",
+    "check_claims.py"
+  ],
+  "_description_file": "zenodo_paper_v1_description.txt",
+  "metadata": {
+    "title": "Announced vs. Deliverable AI Power Demand",
+    "version": "v1",
+    "upload_type": "publication",
+    "publication_type": "workingpaper",
+    "license": "CC-BY-4.0",
+    "creators": [
+      { "name": "NM AI Research", "orcid": "0009-0003-4213-7769" }
+    ],
+    "keywords": [
+      "AI power demand",
+      "data centre electricity",
+      "data center load",
+      "interconnection queue",
+      "PJM",
+      "ERCOT",
+      "large load",
+      "completion rate",
+      "deflation",
+      "reproducibility",
+      "energy"
+    ],
+    "related_identifiers": [
+      { "relation": "references", "identifier": "10.5281/zenodo.20512703", "scheme": "doi" },
+      { "relation": "isSupplementedBy", "identifier": "10.5281/zenodo.20559430", "scheme": "doi" }
+    ]
+  }
+}
