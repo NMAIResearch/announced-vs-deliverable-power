@@ -5,7 +5,7 @@ An interactive front-end to *Announced vs. Deliverable AI Power Demand*. The the
 **Live tool:** https://nmairesearch.github.io/announced-vs-deliverable-power/
 **Canonical record (concept DOI, auto-resolves to latest):** [DOI 10.5281/zenodo.20559430](https://doi.org/10.5281/zenodo.20559430)
 **Version 1 record (2026-08):** [DOI 10.5281/zenodo.21971645](https://doi.org/10.5281/zenodo.21971645)
-**Author:** NM AI Research · ORCID [0009-0003-4213-7769](https://orcid.org/0009-0003-4213-7769) · Licence CC BY 4.0
+**Author:** NMAI Research · ORCID [0009-0003-4213-7769](https://orcid.org/0009-0003-4213-7769) · Licence CC BY 4.0
 
 ## What it does
 
